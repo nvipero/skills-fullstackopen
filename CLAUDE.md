@@ -20,6 +20,14 @@ Työ kohdistuu **aina yhteen projektihakemistoon kerrallaan**. Aja komennot siin
 
 Sama koskee dependency-päivityksiä: `dependency-updater`-agentti ajetaan aina yhteen projektiin rajattuna.
 
+## Ei worktreetä
+
+Työskennellään suoraan työhakemistossa. Älä luo worktreetä äläkä siirry sellaiseen — et agenteille etkä pääsessiolle.
+
+Syy on konkreettinen: tämä on paikallinen opiskeluprojekti, jonka commitit ovat edellä `origin/main`ia. Worktree haarautuu oletuksena remotesta, jossa uusimpia osioita ei ole, joten se ei löytäisi niitä lainkaan.
+
+**Jos jokin hakemisto puuttuu työtilasta, se on merkki juuri tästä.** Kerro se suoraan äläkä kopioi, synkronoi tai luo tiedostoja paikalleen (`cp`, `rsync`, `git checkout`). Kopiolla työskentely tuottaisi tuloksen väärästä tilasta, ja muutokset katoaisivat worktreen mukana.
+
 ## Kurssikonteksti: tehtäväkoodin kirjoittaa ihminen
 
 Tämä on oppimisrepo. Tehtävien ratkaiseminen **on** se tuote — valmis toimiva koodi ei ole. Tehtävän ratkaiseminen puolestani ei säästä minulta työtä, se poistaa työn jonka takia repo on olemassa.
