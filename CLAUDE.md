@@ -10,6 +10,14 @@ Jokainen `partN/<projekti>` on **itsenäinen projekti** omalla `package.json`:ll
 
 `part0` sisältää vain mermaid-diagrammeja, ei koodia.
 
+## Ei worktreetä
+
+Työskennellään suoraan työhakemistossa. Älä luo worktreetä äläkä siirry sellaiseen — et agenteille etkä pääsessiolle.
+
+Syy: kesken oleva tehtävätyö on tyypillisesti committoimatta. Worktree saa puhtaan työhakemiston commitista eikä kanna mukanaan stagettuja tai stagettamattomia muutoksia, joten kesken oleva tehtävä ei näkyisi siellä lainkaan. Myöskään `node_modules` ei ole valmiina.
+
+Jos jokin hakemisto tai muutos puuttuu työtilasta, kerro se suoraan äläkä kopioi tai synkronoi tiedostoja paikalleen (`cp`, `rsync`, `git checkout`).
+
 ## Työskentelyn rajaus
 
 Työ kohdistuu **aina yhteen projektihakemistoon kerrallaan**. Aja komennot siinä hakemistossa, älä repon juuressa.
@@ -19,14 +27,6 @@ Työ kohdistuu **aina yhteen projektihakemistoon kerrallaan**. Aja komennot siin
 - Projektien väliset versioerot **eivät ole vika**. Eri osiot on tehty eri aikaan, ja jokainen vastaa sen hetkistä kurssimateriaalia. Älä yhtenäistä versioita projektien välillä.
 
 Sama koskee dependency-päivityksiä: `dependency-updater`-agentti ajetaan aina yhteen projektiin rajattuna.
-
-## Ei worktreetä
-
-Työskennellään suoraan työhakemistossa. Älä luo worktreetä äläkä siirry sellaiseen — et agenteille etkä pääsessiolle.
-
-Syy on konkreettinen: tämä on paikallinen opiskeluprojekti, jonka commitit ovat edellä `origin/main`ia. Worktree haarautuu oletuksena remotesta, jossa uusimpia osioita ei ole, joten se ei löytäisi niitä lainkaan.
-
-**Jos jokin hakemisto puuttuu työtilasta, se on merkki juuri tästä.** Kerro se suoraan äläkä kopioi, synkronoi tai luo tiedostoja paikalleen (`cp`, `rsync`, `git checkout`). Kopiolla työskentely tuottaisi tuloksen väärästä tilasta, ja muutokset katoaisivat worktreen mukana.
 
 ## Kurssikonteksti: tehtäväkoodin kirjoittaa ihminen
 
@@ -42,9 +42,17 @@ Tämä on oppimisrepo. Tehtävien ratkaiseminen **on** se tuote — valmis toimi
 - Virhetilanteessa auta lukemaan virheilmoitus, älä ohita sitä korjauksella.
 
 **Nämä ovat vapaasti sallittuja**, koska ne eivät ole kurssin oppimistavoite:
-- Kirjoittamani koodin review ja palaute
+- Kirjoittamani koodin review ja palaute. Review saa osoittaa ongelman ja nimetä käsitteen, ei kirjoittaa korjausta valmiiksi.
 - Käsitteiden selittäminen ja kysymyksiin vastaaminen
-- Tooling, konfiguraatiot, dependency-päivitykset, `.gitignore`, diagrammit
+- Tooling, konfiguraatiot, dependency-päivitykset, `.gitignore`, diagrammit. Poikkeuksena, jos asia on osion tehtävänannossa, se on tehtäväkoodia riippumatta siitä miltä se näyttää eli silloin sen saa tehdä vain ihminen.
 - Ympäristöongelmien ja build-virheiden selvittäminen
 
 Kun selität ratkaisua, pysy sen osion opetusaiheissa jota olen tekemässä. Älä esittele abstraktioita, patterneja tai kirjastoja joita materiaali ei ole vielä käsitellyt, vaikka ne olisivat tuotantokoodissa perusteltuja. Ennenaikainen abstraktio hämärtää sen mitä osion on tarkoitus opettaa.
+
+## Myös commitit tekee ihminen
+
+Älä aja `git commit`-, `git push`- tai PR-komentoja. Valmistele muutokset työhakemistoon ja kerro mitä muutit; commitin teen minä.
+
+Syy: Claude Code lisää tekemiinsä committeihin `Co-Authored-By: Claude`-rivin ja PR-kuvauksiin vastaavan merkinnän. Rivi kertoo kuka ajoi commitin, ei kuka kirjoitti koodin, joten se merkitsisi AI-osallistumisen myös committiin jonka sisällön olen kirjoittanut itse. Tämän repon historiaa luetaan todisteena siitä kuka kurssityön teki.
+
+Commit-viestin saa ehdottaa. Jos olet itse tehnyt commitin sisällön (tooling, konfiguraatio, dokumentaatio), sano se — lisään `Co-Authored-By`-rivin silloin käsin.
