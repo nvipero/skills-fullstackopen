@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import axios from "axios";
-import Filter from "./components/Filter.jsx";
-import PersonForm from "./components/PersonForm.jsx";
-import Persons from "./components/Persons.jsx";
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
+import personService from "./services/persons"
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,26 +11,45 @@ const App = () => {
   const [filterValue, setFilterValue] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(({ data }) => {
-        setPersons(data);
+    personService.getAll()
+      .then(data => {
+        if (Array.isArray(data)) {
+          setPersons(data)
+        }
       })
   }, [])
 
   const onFormSubmit = (event) => {
     event.preventDefault();
-    const userExists = persons.filter(p => p.name === newName).length > 0;
-    if (userExists) {
-      alert(`${newName} is already added to phonebook`);
+    const existingUser = persons.find(p => p.name === newName);
+    if (existingUser && !!newNumber) {
+      if (window.confirm(`${newName} already exists, do you wish to replace number?`)) {
+        personService.update({ ...existingUser, number: newNumber })
+          .then((updatedPerson) => {
+            setPersons(persons.map(person => person.id === existingUser.id ? updatedPerson : person ));
+          })
+      }
     } else if (!newName || !newNumber) {
       alert('new entry must have name and phone number')
     } else {
-      console.log('submit');
-      setPersons(persons.concat({ name: newName, number: newNumber }))
+      personService.add({ name: newName, number: newNumber })
+        .then((person) => {
+            setPersons(persons.concat(person));
+          }
+        )
     }
     setNewName('');
     setNewNumber('');
+  }
+  const onDeletePerson = ({ name, id }) => {
+    if (window.confirm(`Are you sure you want to remove ${name}?`)) {
+      personService.deletePerson(id)
+        .then(response => {
+          if (response.status === 200) {
+            setPersons(persons.filter(person => person.id !== id));
+          }
+        })
+    }
   }
 
   const onNameInputChange = (event) => {
@@ -61,7 +80,7 @@ const App = () => {
         onSubmit={onFormSubmit} />
 
       <h3>Numbers</h3>
-      <Persons persons={persons} filterValue={filterValue} />
+      <Persons persons={persons} filterValue={filterValue} onDelete={onDeletePerson} />
     </div>
   )
 }
