@@ -3,12 +3,14 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import personService from "./services/persons"
+import Notification from "./components/Notification.jsx";
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterValue, setFilterValue] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll()
@@ -19,6 +21,14 @@ const App = () => {
       })
   }, [])
 
+  useEffect(() => {
+    if (notificationMessage !== null) {
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
+    }
+  }, [notificationMessage])
+
   const onFormSubmit = (event) => {
     event.preventDefault();
     const existingUser = persons.find(p => p.name === newName);
@@ -27,6 +37,13 @@ const App = () => {
         personService.update({ ...existingUser, number: newNumber })
           .then((updatedPerson) => {
             setPersons(persons.map(person => person.id === existingUser.id ? updatedPerson : person ));
+            setNotificationMessage({ text: `Updated ${existingUser.name}`, type: "success" })
+          })
+          .catch(error => {
+            if (error.status === 404) {
+              setNotificationMessage({ text: `Information of ${existingUser.name} has already been removed`, type: "success" })
+              setPersons(persons.filter(person => person.id !== existingUser.id ));
+            }
           })
       }
     } else if (!newName || !newNumber) {
@@ -35,6 +52,7 @@ const App = () => {
       personService.add({ name: newName, number: newNumber })
         .then((person) => {
             setPersons(persons.concat(person));
+            setNotificationMessage({ text: `Added ${newName}`, type: "success" })
           }
         )
     }
@@ -68,6 +86,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={notificationMessage} />
       <h2>Phonebook</h2>
       <Filter onChange={onFilterChange} value={filterValue} />
 
