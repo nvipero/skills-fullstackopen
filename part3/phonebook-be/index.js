@@ -45,15 +45,27 @@ app.get('/api/persons', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
+
   if (!body.name || !body.number) {
+    const missingValues = []
+    !body.name && missingValues.push('name')
+    !body.number && missingValues.push('number')
+
     return response.status(400).json({
-      error: 'content missing'
+      error: `missing: ${missingValues.toString()}`
+    })
+  }
+  const existingPerson = persons.find(p => p.name === body.name)
+  if (existingPerson) {
+    return response.status(400).json({
+      error: 'name must be unique'
     })
   }
 
   const getRandomId = () => {
     return Math.floor(Math.random() * 1000000)
   }
+
   const person = { ...body, id: String(getRandomId()) }
   persons.push(person)
 
