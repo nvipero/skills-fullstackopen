@@ -30,6 +30,13 @@ app.get('/', (request, response) => {
   response.send('API OK');
 })
 
+app.get('/info', (request, response) => {
+  response.send(`
+    Phonebook has info for ${notes.length} people<br/>
+    ${new Date()}
+  `);
+})
+
 app.get('/api/persons', (request, response) => {
   response.json(notes)
 })
