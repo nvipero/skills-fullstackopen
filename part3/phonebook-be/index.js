@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 const PORT = 3001
 
 let persons = [
@@ -39,6 +41,23 @@ app.get('/info', (request, response) => {
 
 app.get('/api/persons', (request, response) => {
   response.json(persons)
+})
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+  if (!body.name || !body.number) {
+    return response.status(400).json({
+      error: 'content missing'
+    })
+  }
+
+  const getRandomId = () => {
+    return Math.floor(Math.random() * 1000000)
+  }
+  const person = { ...body, id: String(getRandomId()) }
+  persons.push(person)
+
+  response.status(201).json(person)
 })
 
 app.get('/api/persons/:id', (request, response) => {
